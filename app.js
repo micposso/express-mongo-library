@@ -1,9 +1,23 @@
+// Express requirements
 var createError = require('http-errors');
 var express = require('express');
+require('dotenv').config();
+
+//Set up mongoose connection
+var mongoose = require('mongoose');
+const database = process.env.DB;
+var mongoDB = database;
+mongoose.connect(mongoDB, { useNewUrlParser: true , useUnifiedTopology: true});
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.on('sucess', console.error.bind(console, 'MongoDB connection Works!:'));
+
+// App requirements
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// Routers
 var indexRouter = require('./routes/home');
 var usersRouter = require('./routes/users');
 var galleryRouter = require('./routes/gallery');
@@ -21,7 +35,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/home', indexRouter);
+app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/gallery', galleryRouter);
 
